@@ -3,11 +3,12 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "start": "bun server.ts",
+        "start": "NODE_ENV=production bun server.ts",
         "dev": "bun --watch server.ts"
     },
     "dependencies": {
         "ejs": "github:yt-dlp/ejs#689764f8cea694e99609a41f1630d2e7e8e8668a",
+        "elysia": "^1.4.9",
         "lru-cache": "^11.2.2",
         "prom-client": "^15.1.3"
     },

@@ -46,7 +46,7 @@ export function execInPool(data: string): Promise<string> {
 
 export function initializeWorkers() {
     for (let i = 0; i < CONCURRENCY; i++) {
-        const worker: WorkerWithStatus = new Worker(new URL('../worker', import.meta.url).href, { type: 'module' }); // ???
+        const worker: WorkerWithStatus = new Worker(new URL('../worker', import.meta.url).href, { type: 'module' });
         worker.isIdle = true;
         workers.push(worker);
     }
