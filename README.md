@@ -41,6 +41,42 @@ bun install
 bun start
 ```
 
+### NixOS
+
+In your `flake.nix`:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    yt-cipher.url = "github:kikkia/yt-cipher";
+  };
+
+  outputs = { self, nixpkgs, yt-cipher }:
+    {
+      nixosConfigurations.your-hostname = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          yt-cipher.nixosModules.default
+          ./configuration.nix
+        ];
+      };
+    };
+}
+```
+
+In your `configuration.nix`:
+
+```nix
+{
+  programs.yt-cipher = {
+    enable = true;
+    openFirewall = true;
+    # apiToken = "your-secret-token";
+  };
+}
+```
+
 ## Authentication
 
 You can optionally set the `API_TOKEN` environment variable in your `docker-compose.yml` file to require a password to access the service.
