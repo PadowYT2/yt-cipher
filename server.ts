@@ -14,6 +14,11 @@ await initializeCache();
 initializeWorkers();
 
 const app = new Elysia()
+    .get(
+        '/',
+        () =>
+            'There is no endpoint here, you can read the API spec at https://github.com/kikkia/yt-cipher?tab=readme-ov-file#api-specification. If you are using yt-source/lavalink, use this url for your remote cipher url',
+    )
     // @ts-expect-error
     .onBeforeHandle(({ request, status }) => {
         const authHeader = request.headers.get('authorization');
@@ -21,11 +26,6 @@ const app = new Elysia()
             return status(401, { error: authHeader ? 'Invalid API token' : 'Missing API token' });
         }
     })
-    .get(
-        '/',
-        () =>
-            'There is no endpoint here, you can read the API spec at https://github.com/kikkia/yt-cipher?tab=readme-ov-file#api-specification. If you are using yt-source/lavalink, use this url for your remote cipher url',
-    )
     .get('/metrics', async ({ status }) => {
         if (DISABLE_METRICS) {
             return status(404, 'NOT_FOUND');
