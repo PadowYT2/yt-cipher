@@ -4,7 +4,7 @@ An http api wrapper for [yt-dlp/ejs](https://github.com/yt-dlp/ejs).
 
 ## Public instance
 
-You can use the public instance without a password at `https://cipher.kikkia.dev/api/`. 
+You can use the public instance without a password at `https://cipher.kikkia.dev/api/`.
 I do my best to keep it up and running and decently fast, but I don't garuntee 100% uptime. Feel free to host it yourself or use the public API.
 
 WARNING: Ratelimit of 10 requests/sec (should be fine up to 1000+ active players). If you have more than 1k players you probably want to host it yourself.
@@ -50,11 +50,11 @@ Requests without a valid `Authorization: <your_token>` header will be rejected i
 ## Config
 
 Environment Variables:
-- `MAX_THREADS` - max # of workers that can handle requests. Default is 1 per thread on the machine or 1 if it can't determine that for some reason. 
+- `MAX_THREADS` - max # of workers that can handle requests. Default is 1 per thread on the machine or 1 if it can't determine that for some reason
 - `API_TOKEN` - A required password to access this service
 - `PORT` - Port to run the api on, default: `8001`
 - `HOST` - Sets the hostname for the deno server, default: `0.0.0.0`
-- `PREPROCESSED_CACHE_SIZE` - Max size of processed player script cache. Lower to consume less memory. default: `150`
+- `PREPROCESSED_CACHE_SIZE` - Max size of processed player script cache. Lower to consume less memory, default: `150`
 - `DISABLE_METRICS` - Disables the metrics made for prometheus
 
 ## IPv6 Support
@@ -70,6 +70,7 @@ When accessing the service over IPv6, make sure to use the correct address forma
 If you are using this with the [youtube-source](https://github.com/lavalink-devs/youtube-source) plugin, please reference the [setup steps](https://github.com/lavalink-devs/youtube-source?tab=readme-ov-file#using-a-remote-cipher-server).
 
 ### Timeout issues
+
 If you ever have issues with read timeout errors, you can try upping the http timeouts in your lavalink config
 ```yaml
 lavalink:
