@@ -17,31 +17,28 @@ The easiest way to host this service is with Docker
 
 ```bash
 git clone https://github.com/kikkia/yt-cipher.git
-
 cd yt-cipher
-
-docker-compose build
-docker-compose up
 ```
 
-### Deno
+Build container and run:
+```bash
+docker compose up --build
+```
 
-If you have Deno installed, you can run the service directly.
+### Bun
 
-Clone the repository and patch the `ejs` dependency:
+If you have Bun installed, you can run the service directly.
 
+Clone this repository:
 ```bash
 git clone https://github.com/kikkia/yt-cipher.git
 cd yt-cipher
-git clone https://github.com/yt-dlp/ejs.git
-cd ejs
-git checkout 689764f8cea694e99609a41f1630d2e7e8e8668a
-cd ..
-deno run --allow-read --allow-write ./scripts/patch-ejs.ts
 ```
 
+Install dependencies and run:
 ```bash
-deno run --allow-net --allow-read --allow-write --allow-env server.ts
+bun install
+bun start
 ```
 
 ## Authentication

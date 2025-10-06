@@ -9,5 +9,6 @@ services:
     ports:
       - "8001:8001"
     environment:
+      - PORT=8001
       - API_TOKEN=test
     restart: unless-stopped

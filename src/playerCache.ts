@@ -1,40 +1,40 @@
-import { crypto } from "https://deno.land/std@0.224.0/crypto/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.224.0/fs/ensure_dir.ts";
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { cacheSize } from "./metrics.ts";
+import crypto from 'node:crypto';
+import { readdir, stat, utimes } from 'node:fs/promises';
+import { join } from 'node:path';
+import Bun from 'bun';
+import { cacheSize } from '@/metrics';
 
-export const CACHE_DIR = join(Deno.cwd(), 'player_cache');
+export const CACHE_DIR = join(process.cwd(), 'player_cache');
 
 export async function getPlayerFilePath(playerUrl: string): Promise<string> {
     // This hash of the player script url will mean that diff region scripts are treated as unequals, even for the same version #
     // I dont think I have ever seen 2 scripts of the same version differ between regions but if they ever do this will catch it
     // As far as player script access, I haven't ever heard about YT ratelimiting those either so ehh
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(playerUrl));
-    const hash = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    const hash = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
     const filePath = join(CACHE_DIR, `${hash}.js`);
 
     try {
-        const stat = await Deno.stat(filePath);
+        const fileStat = await stat(filePath);
         // updated time on file mark it as recently used.
-        await Deno.utime(filePath, new Date(), stat.mtime ?? new Date());
+        await utimes(filePath, new Date(), fileStat.mtime ?? new Date());
         return filePath;
-    } catch (error) {
-        if (error instanceof Deno.errors.NotFound) {
+    } catch (error: any) {
+        if (error.code === 'ENOENT') {
             console.log(`Cache miss for player: ${playerUrl}. Fetching...`);
             const response = await fetch(playerUrl);
             if (!response.ok) {
                 throw new Error(`Failed to fetch player from ${playerUrl}: ${response.statusText}`);
             }
             const playerContent = await response.text();
-            await Deno.writeTextFile(filePath, playerContent);
+            await Bun.file(filePath).write(playerContent);
 
             // Update cache size for metrics
-            let fileCount = 0;
-            for await (const _ of Deno.readDir(CACHE_DIR)) {
-                fileCount++;
-            }
-            cacheSize.labels({ cache_name: 'player' }).set(fileCount);
-            
+            const files = await readdir(CACHE_DIR);
+            cacheSize.labels({ cache_name: 'player' }).set(files.length);
+
             console.log(`Saved player to cache: ${filePath}`);
             return filePath;
         }
@@ -43,20 +43,19 @@ export async function getPlayerFilePath(playerUrl: string): Promise<string> {
 }
 
 export async function initializeCache() {
-    await ensureDir(CACHE_DIR);
-
     // Since these accumulate over time just cleanout 14 day unused ones
     let fileCount = 0;
     const thirtyDays = 14 * 24 * 60 * 60 * 1000;
     console.log(`Cleaning up player cache directory: ${CACHE_DIR}`);
-    for await (const dirEntry of Deno.readDir(CACHE_DIR)) {
-        if (dirEntry.isFile) {
+    for (const dirEntry of await readdir(CACHE_DIR, { withFileTypes: true })) {
+        if (dirEntry.isFile()) {
             const filePath = join(CACHE_DIR, dirEntry.name);
-            const stat = await Deno.stat(filePath);
-            const lastAccessed = stat.atime?.getTime() ?? stat.mtime?.getTime() ?? stat.birthtime?.getTime();
-            if (lastAccessed && (Date.now() - lastAccessed > thirtyDays)) {
+            const fileStat = await stat(filePath);
+            const lastAccessed =
+                fileStat.atime?.getTime() ?? fileStat.mtime?.getTime() ?? fileStat.birthtime?.getTime();
+            if (lastAccessed && Date.now() - lastAccessed > thirtyDays) {
                 console.log(`Deleting stale player cache file: ${filePath}`);
-                await Deno.remove(filePath);
+                await Bun.file(filePath).delete();
             } else {
                 fileCount++;
             }

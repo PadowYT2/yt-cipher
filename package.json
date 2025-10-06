@@ -1,0 +1,20 @@
+{
+    "name": "yt-cipher",
+    "version": "1.0.0",
+    "type": "module",
+    "scripts": {
+        "start": "bun server.ts",
+        "dev": "bun --watch server.ts"
+    },
+    "dependencies": {
+        "ejs": "github:yt-dlp/ejs#689764f8cea694e99609a41f1630d2e7e8e8668a",
+        "lru-cache": "^11.2.2",
+        "prom-client": "^15.1.3"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.2.4",
+        "@tsconfig/strictest": "^2.0.6",
+        "@types/bun": "^1.2.22",
+        "typescript": "^5.9.2"
+    }
+}

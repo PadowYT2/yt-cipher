@@ -1,9 +1,12 @@
-import { cacheSize } from "./metrics.ts";
-import { LRU } from "https://deno.land/x/lru@1.0.2/mod.ts";
+import { LRUCache } from 'lru-cache';
+import { cacheSize } from '@/metrics';
 
-export class InstrumentedLRU<T> extends LRU<T> {
-    constructor(private cacheName: string, maxSize: number) {
-        super(maxSize);
+export class InstrumentedLRU<T extends {}> extends LRUCache<string, T> {
+    constructor(
+        private cacheName: string,
+        max: number,
+    ) {
+        super({ max });
     }
 
     override set(key: string, value: T): this {
@@ -12,8 +15,9 @@ export class InstrumentedLRU<T> extends LRU<T> {
         return this;
     }
 
-    override remove(key: string) {
-        super.remove(key);
-        cacheSize.labels({ cache_name: this.cacheName }).set(this.size);
+    override delete(key: string): boolean {
+        const deleted = super.delete(key);
+        if (deleted) cacheSize.labels({ cache_name: this.cacheName }).set(this.size);
+        return deleted;
     }
 }

@@ -1,0 +1,21 @@
+{
+    "extends": "@tsconfig/strictest",
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "Bundler",
+        "checkJs": false,
+        "allowJs": false,
+        "outDir": "./dist",
+        "removeComments": true,
+        "noUncheckedIndexedAccess": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "ignoreDeprecations": "5.0",
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    },
+    "include": ["./src/", "./server.ts", "./worker.ts"]
+}

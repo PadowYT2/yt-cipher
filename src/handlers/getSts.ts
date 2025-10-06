@@ -1,6 +1,7 @@
-import { getPlayerFilePath } from "../playerCache.ts";
-import type { RequestContext, StsRequest, StsResponse } from "../types.ts";
-import { stsCache } from "../stsCache.ts";
+import Bun from 'bun';
+import { getPlayerFilePath } from '@/playerCache';
+import { stsCache } from '@/stsCache';
+import { RequestContext, StsRequest, StsResponse } from '@/types';
 
 export async function handleGetSts(ctx: RequestContext): Promise<Response> {
     const { player_url } = ctx.body as StsRequest;
@@ -11,27 +12,27 @@ export async function handleGetSts(ctx: RequestContext): Promise<Response> {
         const response: StsResponse = { sts: cachedSts };
         return new Response(JSON.stringify(response), {
             status: 200,
-            headers: { "Content-Type": "application/json", "X-Cache-Hit": "true" },
+            headers: { 'Content-Type': 'application/json', 'X-Cache-Hit': 'true' },
         });
     }
 
-    const playerContent = await Deno.readTextFile(playerFilePath);
+    const playerContent = await Bun.file(playerFilePath).text();
 
     const stsPattern = /(signatureTimestamp|sts):(\d+)/;
     const match = playerContent.match(stsPattern);
 
-    if (match && match[2]) {
+    if (match?.[2]) {
         const sts = match[2];
         stsCache.set(playerFilePath, sts);
         const response: StsResponse = { sts };
         return new Response(JSON.stringify(response), {
             status: 200,
-            headers: { "Content-Type": "application/json", "X-Cache-Hit": "false" },
+            headers: { 'Content-Type': 'application/json', 'X-Cache-Hit': 'false' },
         });
     } else {
-        return new Response(JSON.stringify({ error: "Timestamp not found in player script" }), {
+        return new Response(JSON.stringify({ error: 'Timestamp not found in player script' }), {
             status: 404,
-            headers: { "Content-Type": "application/json" },
+            headers: { 'Content-Type': 'application/json' },
         });
     }
 }
