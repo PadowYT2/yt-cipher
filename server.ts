@@ -8,6 +8,7 @@ import { initializeCache } from '@/playerCache';
 import { initializeWorkers } from '@/workerPool';
 
 const API_TOKEN = Bun.env.API_TOKEN;
+const DISABLE_METRICS = Boolean(Bun.env.DISABLE_METRICS);
 
 await initializeCache();
 initializeWorkers();
@@ -25,7 +26,10 @@ const app = new Elysia()
         () =>
             'There is no endpoint here, you can read the API spec at https://github.com/kikkia/yt-cipher?tab=readme-ov-file#api-specification. If you are using yt-source/lavalink, use this url for your remote cipher url',
     )
-    .get('/metrics', async () => {
+    .get('/metrics', async ({ status }) => {
+        if (DISABLE_METRICS) {
+            return status(404, 'NOT_FOUND');
+        }
         return new Response(await registry.metrics(), { headers: { 'Content-Type': 'text/plain' } });
     })
     .post(
@@ -33,6 +37,9 @@ const app = new Elysia()
         async ({ body, request }) => {
             const ctx = { req: request, body };
             const handler = withPlayerUrlValidation(handleDecryptSignature);
+            if (DISABLE_METRICS) {
+                return handler(ctx);
+            }
             return withMetrics(handler)(ctx);
         },
         { body: t.Object({ player_url: t.String(), signature_timestamp: t.Number() }) },
@@ -42,6 +49,9 @@ const app = new Elysia()
         async ({ body, request }) => {
             const ctx = { req: request, body };
             const handler = withPlayerUrlValidation(handleGetSts);
+            if (DISABLE_METRICS) {
+                return handler(ctx);
+            }
             return withMetrics(handler)(ctx);
         },
         { body: t.Object({ player_url: t.String() }) },
