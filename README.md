@@ -55,6 +55,8 @@ Environment Variables:
 - `PORT` - Port to run the api on, default: `8001`
 - `HOST` - Sets the hostname for the deno server, default: `0.0.0.0`
 - `PREPROCESSED_CACHE_SIZE` - Max size of processed player script cache. Lower to consume less memory, default: `150`
+- `SOLVER_CACHE_SIZE` - Max size of solver function cache. Lower to consume less memory, default: `50`
+- `STS_CACHE_SIZE` - Max size of signature timestamp cache. Lower to consume less memory, default: `150`
 - `DISABLE_METRICS` - Disables the metrics made for prometheus
 
 ## IPv6 Support
