@@ -58,6 +58,7 @@ In your `flake.nix`:
         system = "x86_64-linux";
         modules = [
           yt-cipher.nixosModules.default
+          { nixpkgs.overlays = [yt-cipher.overlays.default]; }
           ./configuration.nix
         ];
       };
