@@ -2,6 +2,7 @@ import Bun from 'bun';
 import { Elysia, t } from 'elysia';
 import { handleDecryptSignature } from '@/handlers/decryptSignature';
 import { handleGetSts } from '@/handlers/getSts';
+import { handleResolveUrl } from '@/handlers/resolveUrl';
 import { registry } from '@/metrics';
 import { withMetrics, withPlayerUrlValidation } from '@/middleware';
 import { initializeCache } from '@/playerCache';
@@ -55,6 +56,26 @@ const app = new Elysia()
             return withMetrics(handler)(ctx);
         },
         { body: t.Object({ player_url: t.String() }) },
+    )
+    .post(
+        '/resolve_url',
+        async ({ body, request }) => {
+            const ctx = { req: request, body };
+            const handler = withPlayerUrlValidation(handleResolveUrl);
+            if (DISABLE_METRICS) {
+                return handler(ctx);
+            }
+            return withMetrics(handler)(ctx);
+        },
+        {
+            body: t.Object({
+                stream_url: t.String(),
+                player_url: t.String(),
+                encrypted_signature: t.String(),
+                signature_key: t.Optional(t.String()),
+                n_param: t.Optional(t.String()),
+            }),
+        },
     )
     .listen({
         port: Bun.env.PORT || 8001,

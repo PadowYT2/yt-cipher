@@ -4,7 +4,7 @@ An http api wrapper for [yt-dlp/ejs](https://github.com/yt-dlp/ejs).
 
 ## Public instance
 
-You can use the public instance without a password at `https://cipher.kikkia.dev/api/`.
+You can use the public instance without a password at `https://cipher.kikkia.dev/`. 
 I do my best to keep it up and running and decently fast, but I don't garuntee 100% uptime. Feel free to host it yourself or use the public API.
 
 WARNING: Ratelimit of 10 requests/sec (should be fine up to 1000+ active players). If you have more than 1k players you probably want to host it yourself.
@@ -191,4 +191,35 @@ curl -X POST http://localhost:8001/get_sts \
 -d '{
   "player_url": "https://..."
 }'
+```
+
+
+### `POST /resolve_url`
+
+Resolves a raw stream URL by handling the signature and n-parameter decryption, returning a fully constructed and ready-to-use playback URL.
+
+**Request Body:**
+
+```json
+{
+  "stream_url": "...",
+  "player_url": "...",
+  "encrypted_signature": "...",
+  "signature_key": "...",
+  "n_param": "..."
+}
+```
+
+- `stream_url` (string): The initial stream URL (not video url).
+- `player_url` (string): The URL to the JavaScript player file.
+- `encrypted_signature` (string): The encrypted signature value.
+- `signature_key` (string, optional): The query parameter key to use for the decrypted signature in the final URL. Defaults to `sig`.
+- `n_param` (string, optional): The `n` parameter value. If not provided, it will be extracted from the `stream_url`.
+
+**Successful Response:**
+
+```json
+{
+  "resolved_url": "..."
+}
 ```
