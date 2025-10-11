@@ -1,5 +1,4 @@
 node_modules/
 ejs/
 .vscode/
-player_cache/*
-!player_cache/.gitkeep
+player_cache/

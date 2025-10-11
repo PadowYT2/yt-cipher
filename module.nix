@@ -41,6 +41,12 @@ in {
       description = "Port to run the api on";
     };
 
+    cacheDir = mkOption {
+      type = types.str;
+      default = "/var/cache/yt-cipher/player_cache";
+      description = "Directory to store player cache. It will be created if it does not exist.";
+    };
+
     environment = mkOption {
       type = types.listOf types.str;
       default = [];
@@ -75,8 +81,9 @@ in {
         User = "yt-cipher";
         Group = "yt-cipher";
         Restart = "on-failure";
+        CacheDirectory = "yt-cipher";
 
-        Environment = ["HOST=${cfg.host}" "PORT=${cfg.port}"] ++ (lib.optional (cfg.apiToken != null) "API_TOKEN=${cfg.apiToken}") ++ cfg.environment;
+        Environment = ["HOST=${cfg.host}" "PORT=${cfg.port}" "CACHE_DIR=${cfg.cacheDir}"] ++ (lib.optional (cfg.apiToken != null) "API_TOKEN=${cfg.apiToken}") ++ cfg.environment;
         LoadCredential = lib.optional (cfg.apiTokenFile != null) "API_TOKEN:${cfg.apiTokenFile}";
       };
     };

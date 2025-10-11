@@ -1,10 +1,10 @@
 import crypto from 'node:crypto';
-import { readdir, stat, utimes } from 'node:fs/promises';
+import { mkdir, readdir, stat, utimes } from 'node:fs/promises';
 import { join } from 'node:path';
 import Bun from 'bun';
 import { cacheSize } from '@/metrics';
 
-export const CACHE_DIR = join(process.cwd(), 'player_cache');
+export const CACHE_DIR = Bun.env.CACHE_DIR ?? join(process.cwd(), 'player_cache');
 
 export async function getPlayerFilePath(playerUrl: string): Promise<string> {
     // This hash of the player script url will mean that diff region scripts are treated as unequals, even for the same version #
@@ -43,6 +43,8 @@ export async function getPlayerFilePath(playerUrl: string): Promise<string> {
 }
 
 export async function initializeCache() {
+    await mkdir(CACHE_DIR, { recursive: true });
+
     // Since these accumulate over time just cleanout 14 day unused ones
     let fileCount = 0;
     const thirtyDays = 14 * 24 * 60 * 60 * 1000;
