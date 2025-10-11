@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import Bun from 'bun';
 import { cacheSize } from '@/metrics';
 
-export const CACHE_DIR = Bun.env.CACHE_DIR ?? join(process.cwd(), 'player_cache');
+export const CACHE_DIR = join(Bun.env.CACHE_DIRECTORY ?? process.cwd(), 'player_cache');
 
 export async function getPlayerFilePath(playerUrl: string): Promise<string> {
     // This hash of the player script url will mean that diff region scripts are treated as unequals, even for the same version #
