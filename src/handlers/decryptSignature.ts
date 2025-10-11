@@ -4,6 +4,13 @@ import { RequestContext, SignatureRequest, SignatureResponse } from '@/types';
 export async function handleDecryptSignature(ctx: RequestContext): Promise<Response> {
     const { encrypted_signature, n_param, player_url } = ctx.body as SignatureRequest;
 
+    if (!encrypted_signature && !n_param) {
+        return new Response(JSON.stringify({ error: 'Either encrypted_signature or n_param must be provided' }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+        });
+    }
+
     const solvers = await getSolvers(player_url);
 
     if (!solvers) {

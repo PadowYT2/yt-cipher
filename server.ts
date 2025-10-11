@@ -43,7 +43,13 @@ const app = new Elysia()
             }
             return withMetrics(handler)(ctx);
         },
-        { body: t.Object({ player_url: t.String(), encrypted_signature: t.String(), n_param: t.String() }) },
+        {
+            body: t.Object({
+                player_url: t.String(),
+                encrypted_signature: t.Optional(t.String()),
+                n_param: t.Optional(t.String()),
+            }),
+        },
     )
     .post(
         '/get_sts',
