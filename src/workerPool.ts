@@ -1,7 +1,7 @@
-import Bun from 'bun';
 import { Task, WorkerWithStatus } from '@/types';
 
-const CONCURRENCY = parseInt(Bun.env.MAX_THREADS || '', 10) || navigator.hardwareConcurrency || 1;
+// const CONCURRENCY = parseInt(Bun.env.MAX_THREADS || '', 10) || navigator.hardwareConcurrency || 1;
+const CONCURRENCY = 1;
 
 const workers: WorkerWithStatus[] = [];
 const taskQueue: Task[] = [];
