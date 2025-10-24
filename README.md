@@ -2,10 +2,20 @@ An http api wrapper for [yt-dlp/ejs](https://github.com/yt-dlp/ejs).
 
 # Getting Started
 
+## Lavalink
+The absolute easiest way to use this with Lavalink is to just add this to the youtube plugin config
+```yaml
+plugins:
+  youtube:
+    remoteCipher:
+      url: "https://cipher.kikkia.dev/"
+      userAgent: "your_service_name" # Optional
+```
+
 ## Public instance
 
 You can use the public instance without a password at `https://cipher.kikkia.dev/`. 
-I do my best to keep it up and running and decently fast, but I don't garuntee 100% uptime. Feel free to host it yourself or use the public API.
+I do my best to keep it up and running and decently fast, but I don't guaruntee 100% uptime. Feel free to host it yourself or use the public API.
 
 WARNING: Ratelimit of 10 requests/sec (should be fine up to 1000+ active players). If you have more than 1k players you probably want to host it yourself.
 
@@ -13,7 +23,7 @@ WARNING: Ratelimit of 10 requests/sec (should be fine up to 1000+ active players
 
 ### Docker/Docker-compose
 
-The easiest way to host this service is with Docker
+The easiest way to host this service is with Docker (NOTE: Default password in the docker-compose.yml is "test")
 
 ```bash
 git clone https://github.com/kikkia/yt-cipher.git

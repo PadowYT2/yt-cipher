@@ -10,5 +10,6 @@ services:
       - "8001:8001"
     environment:
       - PORT=8001
-      - API_TOKEN=test
+      # UNCOMMENT API_TOKEN TO ADD A PASSWORD
+      # - API_TOKEN=test
     restart: unless-stopped

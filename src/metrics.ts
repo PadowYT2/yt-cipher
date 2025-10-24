@@ -19,6 +19,13 @@ export const responseCodes = new Counter({
     registers: [registry],
 });
 
+export const workerErrors = new Counter({
+    name: 'worker_errors_total',
+    help: 'Total number of worker errors.',
+    labelNames: ['player_id', 'message'],
+    registers: [registry],
+});
+
 export const endpointLatency = new Histogram({
     name: 'http_request_duration_seconds',
     help: 'HTTP request duration in seconds.',
