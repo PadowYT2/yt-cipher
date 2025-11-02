@@ -47,3 +47,10 @@ export const playerUrlRequests = new Counter({
     labelNames: ['player_id'],
     registers: [registry],
 });
+
+export const playerScriptFetches = new Counter({
+    name: 'player_script_fetches_total',
+    help: 'Total number of player script fetches.',
+    labelNames: ['player_url', 'status'],
+    registers: [registry],
+});

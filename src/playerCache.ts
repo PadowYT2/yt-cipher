@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { mkdir, readdir, stat, utimes } from 'node:fs/promises';
 import { join } from 'node:path';
 import Bun from 'bun';
-import { cacheSize } from '@/metrics';
+import { cacheSize, playerScriptFetches } from '@/metrics';
 
 export const CACHE_DIR = join(Bun.env.CACHE_DIRECTORY ?? process.cwd(), 'player_cache');
 
@@ -25,6 +25,7 @@ export async function getPlayerFilePath(playerUrl: string): Promise<string> {
         if (error.code === 'ENOENT') {
             console.log(`Cache miss for player: ${playerUrl}. Fetching...`);
             const response = await fetch(playerUrl);
+            playerScriptFetches.labels({ player_url: playerUrl, status: response.statusText }).inc();
             if (!response.ok) {
                 throw new Error(`Failed to fetch player from ${playerUrl}: ${response.statusText}`);
             }
