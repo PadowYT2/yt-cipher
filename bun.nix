@@ -133,8 +133,8 @@ let
     );
     "node_modules/ejs/" = pkgs.fetchgit {
       url = "https://github.com/yt-dlp/ejs";
-      rev = "689764f";
-      hash = "sha512-LbYR9RPKgv7tDMIyYLJCamBefEfiMHVzHh2NOZxnxL/RaOg8gK4rPR1HUrZFMoWQHC1vsNQlCPxrbaoKk7PcPw==";
+      rev = "2655b1f";
+      hash = "sha512-tX7EyPx8rPBYlzEVgC9+QUXNiip9hRHH+RTkBxxoxLjeJMRjIq0I6LcDo7Q0k8YO/9ojd+9C4wTzk+1ss2X2Ng==";
     };
     "node_modules/elysia/" = extractTarball (
       pkgs.fetchurl {
