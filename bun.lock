@@ -4,8 +4,8 @@
     "": {
       "name": "yt-cipher",
       "dependencies": {
-        "ejs": "github:yt-dlp/ejs#689764f8cea694e99609a41f1630d2e7e8e8668a",
         "elysia": "^1.4.9",
+        "ejs": "github:yt-dlp/ejs#0.3.0",
         "lru-cache": "^11.2.2",
         "prom-client": "^15.1.3",
       },
@@ -58,7 +58,7 @@
 
     "csstype": ["csstype@3.1.3", "", {}, "sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw=="],
 
-    "ejs": ["ejs@github:yt-dlp/ejs#689764f", { "dependencies": { "astring": "1.9.0", "meriyah": "6.1.4" } }, "yt-dlp-ejs-689764f"],
+    "ejs": ["ejs@github:yt-dlp/ejs#2655b1f", { "dependencies": { "astring": "1.9.0", "meriyah": "6.1.4" } }, "yt-dlp-ejs-2655b1f"],
 
     "elysia": ["elysia@1.4.9", "", { "dependencies": { "cookie": "^1.0.2", "exact-mirror": "0.2.2", "fast-decode-uri-component": "^1.0.1" }, "peerDependencies": { "@sinclair/typebox": ">= 0.34.0 < 1", "file-type": ">= 20.0.0", "openapi-types": ">= 12.0.0", "typescript": ">= 5.0.0" }, "optionalPeers": ["file-type", "typescript"] }, "sha512-BWNhA8DoKQvlQTjAUkMAmNeso24U+ibZxY/8LN96qSDK/6eevaX59r3GISow699JPxSnFY3gLMUzJzCLYVtbvg=="],
 
