@@ -85,7 +85,7 @@ In your `configuration.nix`:
 
 ```nix
 {
-  programs.yt-cipher = {
+  services.yt-cipher = {
     enable = true;
     openFirewall = true;
     # apiToken = "your-secret-token";
