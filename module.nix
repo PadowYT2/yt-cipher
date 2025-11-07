@@ -74,7 +74,7 @@ in {
       }
     ];
 
-    networking.firewall.allowedTCPPorts = lib.optional cfg.openFirewall cfg.port;
+    networking.firewall.allowedTCPPorts = lib.mkIf cfg.openFirewall [cfg.port];
 
     systemd.services.yt-cipher = {
       description = "yt-cipher service";
