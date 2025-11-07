@@ -32,7 +32,7 @@ cd yt-cipher
 
 Build container and run:
 ```bash
-docker compose up --build
+docker compose up
 ```
 
 ### Bun
