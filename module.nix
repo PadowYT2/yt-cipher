@@ -89,7 +89,7 @@ in {
         Restart = "on-failure";
         CacheDirectory = "yt-cipher";
         Environment =
-          ["HOST=${cfg.host}" "PORT=${cfg.port}"]
+          ["HOST=${cfg.host}" "PORT=${toString cfg.port}"]
           ++ (lib.optional (cfg.apiToken != null) "API_TOKEN=${cfg.apiToken}")
           ++ cfg.environment;
         LoadCredential = lib.optional (cfg.apiTokenFile != null) "API_TOKEN:${cfg.apiTokenFile}";
