@@ -1,4 +1,5 @@
 node_modules/
-ejs/
 .vscode/
+dist/
+result/
 player_cache/
