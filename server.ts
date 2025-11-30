@@ -15,17 +15,28 @@ await initializeCache();
 initializeWorkers();
 
 const app = new Elysia()
-    .get(
-        '/',
-        () =>
-            'There is no endpoint here, you can read the API spec at https://github.com/kikkia/yt-cipher?tab=readme-ov-file#api-specification. If you are using yt-source/lavalink, use this url for your remote cipher url',
-    )
-    // @ts-expect-error
+    .get('/', async ({ status }) => {
+        const file = Bun.file('./docs/index.html');
+        if (!(await file.exists())) {
+            return status(404, {
+                error: 'Homepage not found. Please refer to the API spec at https://github.com/kikkia/yt-cipher?tab=readme-ov-file#api-specification',
+            });
+        }
+        return file;
+    })
+    .get('/swagger.yaml', async ({ status }) => {
+        const file = Bun.file('./docs/swagger.yaml');
+        if (!(await file.exists())) {
+            return status(404, { error: 'Swagger spec not found' });
+        }
+        return file;
+    })
     .onBeforeHandle(({ request, status }) => {
         const authHeader = request.headers.get('authorization');
         if (API_TOKEN && authHeader !== API_TOKEN) {
             return status(401, { error: authHeader ? 'Invalid API token' : 'Missing API token' });
         }
+        return;
     })
     .get('/metrics', async ({ status }) => {
         if (DISABLE_METRICS) {

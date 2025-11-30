@@ -27,7 +27,10 @@ export function withMetrics(handler: Next): Next {
             response = await handler(ctx);
         } catch (e) {
             const message = e instanceof Error ? e.message : String(e);
-            response = new Response(JSON.stringify({ error: message }), { status: 500, headers: { "Content-Type": "application/json" } });
+            response = new Response(JSON.stringify({ error: message }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' },
+            });
         }
 
         const duration = (performance.now() - start) / 1000;

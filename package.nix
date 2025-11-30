@@ -7,7 +7,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "yt-cipher";
-  version = "unstable-2025-10-29";
+  version = "unstable-2025-11-30";
 
   src = lib.cleanSource ./.;
 
