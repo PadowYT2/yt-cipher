@@ -16,8 +16,17 @@ export class InstrumentedLRU<T extends {}> extends LRUCache<string, T> {
     }
 
     override delete(key: string): boolean {
-        const deleted = super.delete(key);
-        if (deleted) cacheSize.labels({ cache_name: this.cacheName }).set(this.size);
-        return deleted;
+        const result = super.delete(key);
+        cacheSize.labels({ cache_name: this.cacheName }).set(this.size);
+        return result;
+    }
+
+    override clear(): void {
+        super.clear();
+        cacheSize.labels({ cache_name: this.cacheName }).set(this.size);
+    }
+
+    public remove(key: string): void {
+        this.delete(key);
     }
 }
