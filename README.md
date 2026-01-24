@@ -112,6 +112,10 @@ Environment Variables:
 - `SOLVER_CACHE_SIZE` - Max size of solver function cache. Lower to consume less memory, default: `50`
 - `STS_CACHE_SIZE` - Max size of signature timestamp cache. Lower to consume less memory, default: `150`
 - `DISABLE_METRICS` - Disables the metrics made for prometheus
+- `IGNORE_SCRIPT_REGION` - When set to `true`, this flag modifies the caching behavior of player scripts to disregard regional differences. If your yt-cipher needs to decipher for multiple regions, this can help with memory usage and response time. Default is `false`.
+
+> [!WARNING]
+> While no functional differences have been seen between regional scripts in limited testing, a future YouTube change could break yt-cipher. If you encounter any playback issues, please disable this flag and open an issue.
 
 ## IPv6 Support
 
