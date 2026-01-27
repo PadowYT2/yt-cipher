@@ -1,4 +1,4 @@
-FROM oven/bun:1.3.1-alpine AS deps
+FROM oven/bun:1.3.7-alpine AS deps
 
 WORKDIR /app
 
@@ -6,7 +6,7 @@ COPY package.json bun.lock ./
 
 RUN bun install --frozen-lockfile --production --no-progress
 
-FROM oven/bun:1.3.3-alpine AS builder
+FROM oven/bun:1.3.7-alpine AS builder
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ COPY . .
 
 RUN bun build --compile --target bun --minify server.ts --outfile dist/yt-cipher
 
-FROM alpine:3.22.2 AS runner
+FROM oven/bun:1.3.7-alpine AS runner
 
 COPY --from=builder /app/dist/yt-cipher /usr/local/bin/yt-cipher
 
