@@ -7,7 +7,7 @@
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "yt-cipher";
-  version = "unstable-2026-01-24";
+  version = "unstable-2026-03-10";
 
   src = lib.cleanSource ./.;
 
@@ -44,7 +44,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
     dontFixup = true;
 
-    outputHash = "sha256-7+zS1HgZJj01kT0sEDPLt76aSl6o3Fu/qij2OOOjMnY=";
+    outputHash = "sha256-BCtRrb32NKeqYXcxoPWedWUdwe3EOPHTxMJuLPojxrQ=";
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
   };
