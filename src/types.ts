@@ -1,3 +1,5 @@
+import { PlayerScript } from '@/player';
+
 export interface Solvers {
     n: ((val: string) => string) | null;
     sig: ((val: string) => string) | null;
@@ -51,4 +53,9 @@ export type ApiRequest = SignatureRequest | StsRequest | ResolveUrlRequest;
 export interface RequestContext {
     req: Request;
     body: ApiRequest;
+    playerScript?: PlayerScript;
+}
+
+export interface WithPlayerContext extends RequestContext {
+    playerScript: PlayerScript;
 }

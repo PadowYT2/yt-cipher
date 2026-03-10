@@ -1,11 +1,10 @@
 import Bun from 'bun';
 import { getPlayerFilePath } from '@/playerCache';
 import { stsCache } from '@/stsCache';
-import { RequestContext, StsRequest, StsResponse } from '@/types';
+import { StsResponse, WithPlayerContext } from '@/types';
 
-export async function handleGetSts(ctx: RequestContext): Promise<Response> {
-    const { player_url } = ctx.body as StsRequest;
-    const playerFilePath = await getPlayerFilePath(player_url);
+export async function handleGetSts(ctx: WithPlayerContext): Promise<Response> {
+    const playerFilePath = await getPlayerFilePath(ctx.playerScript);
 
     const cachedSts = stsCache.get(playerFilePath);
     if (cachedSts) {

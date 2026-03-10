@@ -4,7 +4,8 @@ import { handleDecryptSignature } from '@/handlers/decryptSignature';
 import { handleGetSts } from '@/handlers/getSts';
 import { handleResolveUrl } from '@/handlers/resolveUrl';
 import { registry } from '@/metrics';
-import { withMetrics, withPlayerUrlValidation } from '@/middleware';
+import { withMetrics } from '@/middleware';
+import { withPlayer } from '@/middleware/player';
 import { initializeCache } from '@/playerCache';
 import { initializeWorkers } from '@/workerPool';
 
@@ -48,7 +49,7 @@ const app = new Elysia()
         '/decrypt_signature',
         async ({ body, request }) => {
             const ctx = { req: request, body };
-            const handler = withPlayerUrlValidation(handleDecryptSignature);
+            const handler = withPlayer(handleDecryptSignature);
             if (DISABLE_METRICS) {
                 return handler(ctx);
             }
@@ -66,7 +67,7 @@ const app = new Elysia()
         '/get_sts',
         async ({ body, request }) => {
             const ctx = { req: request, body };
-            const handler = withPlayerUrlValidation(handleGetSts);
+            const handler = withPlayer(handleGetSts);
             if (DISABLE_METRICS) {
                 return handler(ctx);
             }
@@ -78,7 +79,7 @@ const app = new Elysia()
         '/resolve_url',
         async ({ body, request }) => {
             const ctx = { req: request, body };
-            const handler = withPlayerUrlValidation(handleResolveUrl);
+            const handler = withPlayer(handleResolveUrl);
             if (DISABLE_METRICS) {
                 return handler(ctx);
             }

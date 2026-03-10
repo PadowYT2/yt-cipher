@@ -1,19 +1,20 @@
 import { getSolvers } from '@/solver';
-import { RequestContext, SignatureRequest, SignatureResponse } from '@/types';
+import { SignatureRequest, SignatureResponse, WithPlayerContext } from '@/types';
 
-export async function handleDecryptSignature(ctx: RequestContext): Promise<Response> {
-    const { encrypted_signature, n_param, player_url } = ctx.body as SignatureRequest;
+export async function handleDecryptSignature(ctx: WithPlayerContext): Promise<Response> {
+    const { encrypted_signature, n_param } = ctx.body as SignatureRequest;
 
     if (!encrypted_signature && !n_param) {
         return new Response(JSON.stringify({ error: 'Either encrypted_signature or n_param must be provided' }), {
-            status: 500,
+            status: 400,
             headers: { 'Content-Type': 'application/json' },
         });
     }
 
-    const solvers = await getSolvers(player_url);
+    const solvers = await getSolvers(ctx.playerScript);
 
     if (!solvers) {
+        console.error(`Failed to generate solvers from player script for player: ${ctx.playerScript?.toUrl()}`);
         return new Response(JSON.stringify({ error: 'Failed to generate solvers from player script' }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },

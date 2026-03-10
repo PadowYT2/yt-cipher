@@ -1,15 +1,15 @@
 import Bun from 'bun';
 import { getFromPrepared } from 'ejs/src/yt/solver/solvers';
 import { workerErrors } from '@/metrics';
+import { PlayerScript } from '@/player';
 import { getPlayerFilePath } from '@/playerCache';
 import { preprocessedCache } from '@/preprocessedCache';
 import { solverCache } from '@/solverCache';
 import { Solvers } from '@/types';
-import { extractPlayerId } from '@/utils';
 import { execInPool } from '@/workerPool';
 
-export async function getSolvers(player_url: string): Promise<Solvers | null> {
-    const playerCacheKey = await getPlayerFilePath(player_url);
+export async function getSolvers(playerScript: PlayerScript): Promise<Solvers | null> {
+    const playerCacheKey = await getPlayerFilePath(playerScript);
 
     let solvers = solverCache.get(playerCacheKey);
 
@@ -20,13 +20,11 @@ export async function getSolvers(player_url: string): Promise<Solvers | null> {
     let preprocessedPlayer = preprocessedCache.get(playerCacheKey);
     if (!preprocessedPlayer) {
         const rawPlayer = await Bun.file(playerCacheKey).text();
-        preprocessedPlayer = await execInPool(rawPlayer);
         try {
             preprocessedPlayer = await execInPool(rawPlayer);
         } catch (e) {
-            const playerId = extractPlayerId(player_url);
             const message = e instanceof Error ? e.message : String(e);
-            workerErrors.labels({ player_id: playerId, message }).inc();
+            workerErrors.labels({ player_id: playerScript.id, player_type: playerScript.variant, message }).inc();
             throw e;
         }
         preprocessedCache.set(playerCacheKey, preprocessedPlayer);

@@ -3,18 +3,35 @@ import { mkdir, readdir, stat, utimes } from 'node:fs/promises';
 import { join } from 'node:path';
 import Bun from 'bun';
 import { cacheSize, playerScriptFetches } from '@/metrics';
-import { extractPlayerId } from '@/utils';
+import { PlayerScript } from '@/player';
 
 const ignorePlayerScriptRegion = Bun.env.IGNORE_SCRIPT_REGION === 'true';
 
-export const CACHE_HOME = Bun.env.XDG_CACHE_HOME || join(Bun.env.HOME ?? '', '.cache');
+const resolveCacheHome = () => {
+    if (Bun.env.XDG_CACHE_HOME) return Bun.env.XDG_CACHE_HOME;
+    if (Bun.env.LOCALAPPDATA) return Bun.env.LOCALAPPDATA;
+
+    const home =
+        Bun.env.HOME ??
+        Bun.env.USERPROFILE ??
+        (Bun.env.HOMEDRIVE && Bun.env.HOMEPATH && `${Bun.env.HOMEDRIVE}${Bun.env.HOMEPATH}`) ??
+        undefined;
+
+    if (home) return join(home, '.cache');
+
+    // last resort
+    return join(process.cwd(), '.cache');
+};
+
+export const CACHE_HOME = resolveCacheHome();
 export const CACHE_DIR = Bun.env.CACHE_DIRECTORY ?? join(CACHE_HOME, 'yt-cipher', 'player_cache');
 
-export async function getPlayerFilePath(playerUrl: string): Promise<string> {
+export async function getPlayerFilePath(playerScript: PlayerScript): Promise<string> {
+    const playerUrl = playerScript.toUrl();
     let cacheKey: string;
     if (ignorePlayerScriptRegion) {
         // I have not seen any scripts that differ between regions so this should be safe
-        cacheKey = extractPlayerId(playerUrl);
+        cacheKey = playerScript.id;
     } else {
         // This hash of the player script url will mean that diff region scripts are treated as unequals, even for the same version #
         // I dont think I have ever seen 2 scripts of the same version differ between regions but if they ever do this will catch it
@@ -35,12 +52,12 @@ export async function getPlayerFilePath(playerUrl: string): Promise<string> {
         if (error.code === 'ENOENT') {
             console.log(`Cache miss for player: ${playerUrl}. Fetching...`);
             const response = await fetch(playerUrl);
-            playerScriptFetches.labels({ player_url: playerUrl, status: response.statusText }).inc();
+            playerScriptFetches.labels({ player_url: playerUrl, status: String(response.status) }).inc();
             if (!response.ok) {
                 throw new Error(`Failed to fetch player from ${playerUrl}: ${response.statusText}`);
             }
             const playerContent = await response.text();
-            await Bun.file(filePath).write(playerContent);
+            await Bun.write(filePath, playerContent);
 
             // Update cache size for metrics
             const files = await readdir(CACHE_DIR);
