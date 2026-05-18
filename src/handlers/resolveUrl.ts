@@ -10,9 +10,6 @@ export async function handleResolveUrl(ctx: WithPlayerContext): Promise<Response
     } = ctx.body as ResolveUrlRequest;
 
     const solvers = await getSolvers(ctx.playerScript);
-    console.log(signature_key);
-    console.log(nParamFromRequest);
-    console.log(stream_url);
 
     if (!solvers) {
         console.error(`Failed to generate solvers from player script for player: ${ctx.playerScript?.toUrl()}`);
@@ -52,7 +49,6 @@ export async function handleResolveUrl(ctx: WithPlayerContext): Promise<Response
     const response: ResolveUrlResponse = {
         resolved_url: url.toString(),
     };
-    console.log(url.toString());
 
     return new Response(JSON.stringify(response), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
